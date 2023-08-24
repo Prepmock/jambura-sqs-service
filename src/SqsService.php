@@ -73,17 +73,19 @@ class SqsService
     /**
      * this function will contain all the business logic required upon message receival.
      *
-     * @param array $message
+     * @param string $message
      * 
      * @return void
      */
-    protected function handle(array $message)
+    protected function handle(string $message)
     {
     }
 
     /**
      * will handle the process after receival of the message.
      * Once done, it will seek for the next message again.
+     * to function it properly one must use a callback function or override the handle function
+     * for both callback function and the handle function, it will receive the message as a string
      *
      * @param callable $callback
      *
@@ -91,20 +93,20 @@ class SqsService
      */
     public function run(callable $callback = null)
     {
-        while (true) {
-            $result = $this->_aws->loadSQS()->receiveMessageByLongPolling($this->getQueueUrl());
+        while ($result = $this->_aws->loadSQS()->receiveMessageByLongPolling($this->getQueueUrl())) {
 
-            if (!empty($result->get('Messages'))) {
-
-                if ($callback !== null) {
-                    call_user_func($callback, $result->get('Messages')[0]['Body']);
-                }
-
-                $this->handle($result->get('Messages')[0]['Body']);
-                $this->_aws->deleteMessage($this->getQueueUrl(), $result->get('Messages')[0]['ReceiptHandle']);
+            if (empty($result->get('Messages'))) {
+                sleep(1);
+                continue;
             }
 
-            sleep(2);
+            if ($callback !== null) {
+                call_user_func($callback, $result->get('Messages')[0]['Body']);
+            } else {
+                $this->handle($result->get('Messages')[0]['Body']);
+            }
+
+            $this->_aws->deleteMessage($this->getQueueUrl(), $result->get('Messages')[0]['ReceiptHandle']);
         }
     }
 }
