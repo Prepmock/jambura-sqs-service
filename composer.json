@@ -1,0 +1,19 @@
+{
+    "name": "prepmock/jambura-sqs-worker",
+    "description": "simple aws sqs worker",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Jambura\\Sqs\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Shahriar Hossain",
+            "email": "shahriar.hossain@prepmock.com"
+        }
+    ],
+    "require": {
+        "aws/aws-sdk-php": "^3.278"
+    }
+}
