@@ -1,6 +1,6 @@
 {
-    "name": "prepmock/jambura-sqs-worker",
-    "description": "simple aws sqs worker",
+    "name": "prepmock/jambura-sqs-service",
+    "description": "Simple aws sqs service",
     "license": "MIT",
     "autoload": {
         "psr-4": {
